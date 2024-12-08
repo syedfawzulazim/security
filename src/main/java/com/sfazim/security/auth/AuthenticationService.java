@@ -20,6 +20,12 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        var userAlreadyExists = repository.findByEmail(request.getEmail());
+        if(userAlreadyExists.isPresent()){
+            return AuthenticationResponse.error("User email already exists");
+        }
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
